@@ -28,9 +28,11 @@ namespace DotLab.Tracer
         {
             MethodBase method = new StackTrace().GetFrame(1).GetMethod();
             TraceRecord record = new TraceRecord(method);
+            if (!records.ContainsKey(record.threadID) || records[record.threadID].Count < 1)
+                res.append(record);
+            else
+                records[record.threadID].Peek().appendChild(record);
             addRecord(record);
-            int nestingLevel = records[record.threadID].Count;
-            res.appendNested(record, nestingLevel);                
         }
 
         public void StopTrace()

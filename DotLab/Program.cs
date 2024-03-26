@@ -11,9 +11,9 @@ namespace DotLab
         static ITracer tracer = new Tracer.Tracer();
         static void Main(string[] args)
         { 
+            toTest();
             toTest2();
-            toTest2();
-            toTest2();
+            toTest();
             Task task = new Task(toTest2);
             task.Start();
             task.Wait();

@@ -27,7 +27,7 @@ namespace DotLab.Tracer
         {
             childMethods.Add(record.method, record);
         }
-        public override string ToString()
+        /*public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
             foreach (var item in childMethods)
@@ -40,7 +40,7 @@ namespace DotLab.Tracer
                     + "Traced method " + method.Name + "\n"
                     + "Elapsed time " + timer.ElapsedMilliseconds + " ms. \n"
                     + "Child methods: \n" + sb.ToString();
-        }
+        }*/
         public bool Equals(TraceRecord other)
         {
             return method.Equals(other.method);
