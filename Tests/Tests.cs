@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using System.Diagnostics;
-using System.Threading;
+using Tracer;
+using Tracer.Serializer;
+using Tracer.Serializer.DTO;
 
-namespace DotLab.Tracer
+namespace Tests
 {
 
     [TestFixture]
     public class TracerLibTests
     {
-        public ITracer Tracer = new Tracer();
+        public ITracer Tracer = new Tracer.Tracer();
 
         private readonly List<Thread> _threads = new List<Thread>();
 
-        readonly int ThreadsCount = 5;
-        readonly int MethodsCount = 5;
+        readonly int ThreadsCount = 10;
+        readonly int MethodsCount = 15;
 
         readonly int MillisecondsTimeout = 100;
 
@@ -34,8 +36,10 @@ namespace DotLab.Tracer
             Method();
             TraceResult traceResult = Tracer.GetTraceResult();
 
-            double methodTime = traceResult.GetThreadTraces()[Thread.CurrentThread.ManagedThreadId].MethodInfo[0].GetTime();
-            double threadTime = traceResult.GetThreadTraces()[Thread.CurrentThread.ManagedThreadId].ThreadTime;
+            var res = new TraceResultBaseDTO(traceResult);
+            long methodTime = res.GetThreadTrace(Thread.CurrentThread.ManagedThreadId).timeNumb;
+            double threadTime = res.GetThreadTrace(Thread.CurrentThread.ManagedThreadId).timeNumb;
+
 
             Assert.IsTrue(methodTime >= MillisecondsTimeout);
             Assert.IsTrue(threadTime >= MillisecondsTimeout);
@@ -52,8 +56,9 @@ namespace DotLab.Tracer
             var time = stopwatch.ElapsedMilliseconds;
 
             TraceResult traceResult = Tracer.GetTraceResult();
+            var res = new TraceResultBaseDTO(traceResult);
 
-            double threadTime = traceResult.GetThreadTraces()[Thread.CurrentThread.ManagedThreadId].ThreadTime;
+            double threadTime = res.GetThreadTrace(Thread.CurrentThread.ManagedThreadId).timeNumb;
 
             bool flag = threadTime + 5 >= time;
             flag |= threadTime - 5 <= time;
@@ -66,14 +71,15 @@ namespace DotLab.Tracer
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             Method();
+            Method();
+            Method();
             var time = stopwatch.ElapsedMilliseconds;
-            Method();
-            Method();
 
 
             TraceResult traceResult = Tracer.GetTraceResult();
+            var res = new TraceResultBaseDTO(traceResult);
 
-            var methodTime = traceResult.GetThreadTraces()[Thread.CurrentThread.ManagedThreadId].MethodInfo[0].Time;
+            var methodTime = res.GetThreadTrace(Thread.CurrentThread.ManagedThreadId).records[0].timeNumb;
 
             Console.WriteLine(time);
             Console.WriteLine(methodTime);
@@ -100,7 +106,9 @@ namespace DotLab.Tracer
             }
 
             TraceResult traceResult = Tracer.GetTraceResult();
-            Assert.AreEqual(ThreadsCount, traceResult.GetThreadTraces().Count);
+            var res = new TraceResultBaseDTO(traceResult);
+            ToJson toJson = new ToJson();
+            Assert.AreEqual(ThreadsCount, res.threads.Count);
         }
 
         // METHODS
@@ -113,7 +121,8 @@ namespace DotLab.Tracer
             }
 
             TraceResult traceResult = Tracer.GetTraceResult();
-            Assert.AreEqual(MethodsCount, traceResult.GetThreadTraces()[Thread.CurrentThread.ManagedThreadId].MethodInfo.Count);
+            var res = new TraceResultBaseDTO(traceResult);
+            Assert.AreEqual(MethodsCount, res.GetThreadTrace(Thread.CurrentThread.ManagedThreadId).records.Count);
         }
     }
  

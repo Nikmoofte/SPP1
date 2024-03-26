@@ -1,4 +1,4 @@
-﻿namespace DotLab.Tracer.Serializer
+﻿namespace Tracer.Serializer
 {
     internal interface ISerializer
     {

@@ -5,8 +5,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
-namespace DotLab.Tracer.Serializer.DTO
+namespace Tracer.Serializer.DTO
 {
     public class TraceRecordBaseDTO
     {
@@ -15,7 +16,8 @@ namespace DotLab.Tracer.Serializer.DTO
             childs = new List<TraceRecordBaseDTO>();
             className = tr.method.ReflectedType.Name;
             methodName = tr.method.Name;
-            time = tr.timer.ElapsedMilliseconds + "ms";
+            timeNumb = tr.timer.ElapsedMilliseconds;
+            time = timeNumb + "ms";
             foreach (var item in tr.childMethods)
                 appendChild(item);
         }
@@ -25,6 +27,7 @@ namespace DotLab.Tracer.Serializer.DTO
             className = "";
             methodName = "";
             time = "0ms";
+            timeNumb = 0;
         }
         void appendChild(KeyValuePair<MethodBase, TraceRecord> item)
         {
@@ -34,6 +37,9 @@ namespace DotLab.Tracer.Serializer.DTO
         public string className { get; set; }
         public string methodName { get; set; }
         public string time { get; set; }
+        [XmlIgnore]
+        [JsonIgnore]
+        public readonly long timeNumb;
         public List<TraceRecordBaseDTO> childs { get; set; }
     }
 }

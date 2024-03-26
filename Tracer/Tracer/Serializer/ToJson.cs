@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
-using DotLab.Tracer.Serializer.DTO;
+using Tracer.Serializer.DTO;
 
-namespace DotLab.Tracer.Serializer
+namespace Tracer.Serializer
 {
     public class ToJson : ISerializer
     {

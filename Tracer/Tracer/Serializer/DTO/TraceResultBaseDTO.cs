@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotLab.Tracer.Serializer.DTO
+namespace Tracer.Serializer.DTO
 {
     public class TraceResultBaseDTO
     {
         public TraceResultBaseDTO(TraceResult tr)
         {
-            threads = new List<ThreadTrace>();
+            threads = new List<ThreadTraceDTO>();
             foreach (var item in tr.records)
             {
                 appendRecords(item);
@@ -18,11 +18,11 @@ namespace DotLab.Tracer.Serializer.DTO
         }
         public TraceResultBaseDTO()
         {
-            threads = new List<ThreadTrace>();
+            threads = new List<ThreadTraceDTO>();
         }
         void appendRecords(KeyValuePair<int, List<TraceRecord>> item)
         {
-            threads.Add(new ThreadTrace(item.Key));
+            threads.Add(new ThreadTraceDTO(item.Key));
             int ind = threads.Count - 1;
             long totalTime = 0;
             foreach (var record in item.Value)
@@ -30,9 +30,14 @@ namespace DotLab.Tracer.Serializer.DTO
                 threads[ind].records.Add(new TraceRecordBaseDTO(record));
                 totalTime += record.timer.ElapsedMilliseconds;
             }
+            threads[ind].timeNumb = totalTime;
             threads[ind].totalTime = totalTime + "ms";
         }
+        public ThreadTraceDTO? GetThreadTrace(int id)
+        {
+            return threads.Find(t => t.id == id);
+        }
 
-        public List<ThreadTrace> threads { get; private set; }
+        public List<ThreadTraceDTO> threads { get; private set; }
     }
 }

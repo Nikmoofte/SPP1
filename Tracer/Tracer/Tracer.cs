@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace DotLab.Tracer
+namespace Tracer
 {
     public class Tracer : ITracer
     {

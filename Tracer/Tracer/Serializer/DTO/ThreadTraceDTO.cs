@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 
-namespace DotLab.Tracer.Serializer.DTO
+namespace Tracer.Serializer.DTO
 {
-    public class ThreadTrace
+    public class ThreadTraceDTO
     {
-        public ThreadTrace(int id)
+        public ThreadTraceDTO(int id)
         {
             this.id = id;
             totalTime = "";
             records = new List<TraceRecordBaseDTO>();
         }
-        public ThreadTrace()
+        public ThreadTraceDTO()
         {
             id = 0;
             totalTime = "";
@@ -20,6 +22,9 @@ namespace DotLab.Tracer.Serializer.DTO
         }
         public int id { get; set; }
         public string totalTime { get; set; }
+        [JsonIgnore]
+        [XmlIgnore]
+        public long timeNumb { get; internal set; }
         public List<TraceRecordBaseDTO> records { get; set; }
     }
 

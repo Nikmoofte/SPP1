@@ -1,4 +1,4 @@
-﻿namespace DotLab.Tracer
+﻿namespace Tracer
 {
     public interface ITracer
     {
